@@ -1,0 +1,29 @@
+{
+    "cmake.cmakePath": "cmake",
+    "files.associations": {
+        "kernel_list.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c",
+        "tree.h": "c",
+        "stdio.h": "c",
+        "stat.h": "c",
+        "sstream": "c",
+        "stdbool.h": "c",
+        "errno.h": "c",
+        "fcntl.h": "c",
+        "math.h": "c",
+        "file.h": "c",
+        "pic.h": "c",
+        "ioctl.h": "c",
+        "dlfcn.h": "c",
+        "jpeglib.h": "c",
+        "wait.h": "c",
+        "dirent.h": "c",
+        "font.h": "c",
+        "lcd.h": "c",
+        "time.h": "c",
+        "2048.h": "c",
+        "touch.h": "c"
+    },
+    // "C_Cpp.errorSquiggles": "disabled"
+}
