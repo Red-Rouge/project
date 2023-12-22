@@ -182,8 +182,9 @@ int pic_clear(Pic *pic, Lcd *lcd)
 
 void pic_draw_circle(Lcd *lcd, int centerX, int centerY, int radius, Pic *pic)
 {
-    float area = acos(-1) * radius * radius;
-    for (int y = ((centerY - radius) < 0 ? 0 : (centerY - radius));y <= ((centerY + radius) > lcd->height ? lcd->height - 1 : (centerY + radius));y++)
+    float area = 0;
+    float pic_area = pic->width * pic->height;
+    for (int y = ((centerY - radius) < 0 ? 0 : (centerY - radius));y <= ((centerY + radius) > lcd->width ? lcd->height - 1 : (centerY + radius));y++)
     {
         for (int x = ((centerX - radius) < 0 ? 0 : (centerX - radius));x <= ((centerX + radius) > lcd->width ? lcd->width - 1 : (centerX + radius));x++)
         {
@@ -191,14 +192,17 @@ void pic_draw_circle(Lcd *lcd, int centerX, int centerY, int radius, Pic *pic)
             {
                 if (pic->lcd_buf_back[(y - pic->y_start) * pic->width + (x - pic->x_start)] == lcd_get_point(lcd, x, y))
                     area -= 1;
-                lcd_draw_point(lcd, x, y, pic->lcd_buf_back[(y - pic->y_start) * pic->width + (x - pic->x_start)]);
+                if (x >= pic->x_start && y >= pic->y_start && x < pic->x_start + pic->width && y < pic->y_start + pic->height)
+                {
+                    lcd_draw_point(lcd, x, y, pic->lcd_buf_back[(y - pic->y_start) * pic->width + (x - pic->x_start)]);
+                    area += 1;
+                }
 
             }
         }
     }
     // 计算圆的面积
-    float pic_area = pic->width * pic->height;
-    pic->display_degree -= area * 100 / pic_area;
+    pic->display_degree -= (area >= 0 ? area : 0) * 103.555 / pic_area;
 }
 
 
@@ -237,7 +241,6 @@ int pic_info(Pic *pic)
     // 返回0
     return 0;
 }
-
 
 
 

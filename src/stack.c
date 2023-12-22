@@ -83,7 +83,6 @@ Stack *stack_top(Stack *stack)
     }
     if (stack->next == NULL)
     {
-        printf("%d\n", __LINE__);
 
         return NULL;
     }

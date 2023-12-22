@@ -33,9 +33,15 @@ int frame_print(Frame **matrix, Font *font, int num, Lcd *lcd)
                 (0XFFFFEEEE & 0xff - (int)(matrix[i][j].num * 3.5)) << 8 |
                 0XFFFFEEEE & 0xff - (int)(matrix[i][j].num * 3.5) << 0);
             if (matrix[i][j].num != -1)
-                font_printf(font, canvas, canvas->height / 2 - canvas->height / 4, canvas->width / 2 - canvas->width / 4, BLACK, 0, "%d", matrix[i][j].num);
+            {
+                int len = 0;
+                char *str = (char *)malloc(sizeof(char) * 10);
+                sprintf(str, "%d", matrix[i][j].num);
+                len = strlen(str);
+                font_printf(font, canvas, canvas->width / 2 - lcd->height / num / 3 * len / 4, canvas->width / 2 - canvas->width / 5, BLACK, 0, "%d", matrix[i][j].num);
+            }
             else
-                font_printf(font, canvas, canvas->height / 2, canvas->width / 2, BLACK, 0, "");
+                font_printf(font, canvas, 0, canvas->width / 2, BLACK, 0, "");
 
             pic_close(canva_show(canvas, lcd, j * lcd->height / num, i * lcd->height / num));
             canvas_close(canvas);
@@ -151,7 +157,7 @@ int matrix_processing(Frame **matrix, int num, Touch *touch)
             }
             for (int j = 0; j < num - 1; j++)
             {
-                if ((matrix[i][j].num == matrix[i][j + 1].num && matrix[i][j].num != -1) && matrix[i][j].num == matrix[i][j + 1].num != 64)
+                if ((matrix[i][j].num == matrix[i][j + 1].num && matrix[i][j].num != -1) && matrix[i][j + 1].num != 128)
                 {
                     status = 1;
                     matrix[i][j].num *= 2;
@@ -181,7 +187,7 @@ int matrix_processing(Frame **matrix, int num, Touch *touch)
             }
             for (int j = num - 1; j > 0; j--)
             {
-                if ((matrix[i][j].num == matrix[i][j + 1].num && matrix[i][j].num != -1) && matrix[i][j].num == matrix[i][j + 1].num != 64)
+                if ((matrix[i][j].num == matrix[i][j + 1].num && matrix[i][j].num != -1) && matrix[i][j + 1].num != 128)
                 {
                     status = 1;
                     matrix[i][j].num *= 2;
@@ -210,7 +216,7 @@ int matrix_processing(Frame **matrix, int num, Touch *touch)
             }
             for (int i = 0; i < num - 1; i++)
             {
-                if ((matrix[i][j].num == matrix[i + 1][j].num && matrix[i][j].num != -1) && matrix[i][j].num == matrix[i][j + 1].num != 64)
+                if ((matrix[i][j].num == matrix[i + 1][j].num && matrix[i][j].num != -1) && matrix[i][j + 1].num != 128)
                 {
                     status = 1;
                     matrix[i][j].num *= 2;
@@ -239,7 +245,7 @@ int matrix_processing(Frame **matrix, int num, Touch *touch)
             }
             for (int i = num - 1; i > 0; i--)
             {
-                if ((matrix[i][j].num == matrix[i - 1][j].num && matrix[i][j].num != -1) && matrix[i][j].num == matrix[i][j + 1].num != 64)
+                if ((matrix[i][j].num == matrix[i - 1][j].num && matrix[i][j].num != -1) && matrix[i][j + 1].num != 128)
                 {
                     status = 1;
                     matrix[i][j].num *= 2;
@@ -275,7 +281,7 @@ void game(Lcd *lcd, Stack *stack, Touch *touch, int num)
     lcd_clear(lcd, WHITE);
     Frame **matrix = frame_create(num, lcd);
     Font *font = font_open("STCAIYUN.TTF");
-    font_size(font, lcd->height / num / 2);
+    font_size(font, lcd->height / num / 3);
     frame_rand(matrix, num);
     frame_print(matrix, font, num, lcd);
     while (1)

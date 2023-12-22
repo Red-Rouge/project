@@ -24,8 +24,6 @@ int lcd_init(Lcd *lcd)
     }
     if (ioctl(lcd->lcd_fb, FBIOGET_VSCREENINFO, lcd->varinfo) != 0)
     {
-        printf("test\n");
-
         perror("ioctl");
         close(lcd->lcd_fb);
         return -1;
@@ -78,7 +76,7 @@ void lcd_clear(Lcd *lcd, unsigned int color)
 void lcd_draw_point(Lcd *lcd, int x, int y, unsigned int color)
 {
     if ((x > 0 && x < lcd->width) && (y > 0 && y < lcd->height))
-        if (color == 0x00000000)
+        if (color != 0x00000000)
             memcpy((void *)(lcd->mmap_addr + y * lcd->width * 4 + x * 4), &color, 4);
 
 }

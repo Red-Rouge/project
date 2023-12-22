@@ -1,13 +1,8 @@
-# 判断系统是linux还是windows
-if(WIN32)
-    message("windows")
-    cmake_minimum_required(VERSION 3.28.0-rc4)
-    project(test)
-elseif(UNIX)
-    message("linux")
-    cmake_minimum_required(VERSION 3.22.1)
-    project(test)
-endif()
+
+message("linux")
+cmake_minimum_required(VERSION 3.22.1)
+project(test)
+
 
 # 判断是否是Linux
 
@@ -18,6 +13,8 @@ set(CMAKE_C_STANDARD 11)
 
 file(GLOB SRC_LIST ${PROJECT_SOURCE_DIR}/src/*.c)
 include_directories(${PROJECT_SOURCE_DIR}/inc)
+# 指定动态库路径
+link_directories(${PROJECT_SOURCE_DIR}/lib)
 # include_directories(${PROJECT_SOURCE_DIR}/jpeg/include)
 
 
@@ -37,13 +34,13 @@ set(CMAKE_C_COMPILER arm-linux-gcc)
 # 编译模式设置Release/Debug
 set(CMAKE_BUILD_TYPE Debug)
 
-link_directories(${PROJECT_SOURCE_DIR}/lib)
-# 指定动态库路径
+
+
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} m)
 
-
-
 # 链接
 target_link_libraries(${PROJECT_NAME} libfont.a)
+
+

@@ -1,21 +1,28 @@
 
-# 判断$s1是否输入
 if [ -z "$1" ]; then
-    # 输出用法
-    echo "用法：$0 s1 s2"
-    exit 0
+    local_files="./bin/test"
+else
+    local_files="$1"
 fi
+echo "本地文件：$local_files"
 # 判断$s1路径的文件是否不存在
-if [ ! -f "$1" ]; then
-    echo "文件 $1 不存在"
+if [ ! -f $local_files ]; then
+    echo "文件 $local_files 不存在"
     exit 0
 fi
+
+
+
 
 if [ -z "$2" ]; then
-    echo "未输入目标参数"
-    exit 0
+    remote_files="/root/project"
+else
+    remote_files="$2"
 fi
-
-
+echo "远程文件夹：$remote_files"
 # 用ssh发送s1的文件到root@192.168.11.56:s2处
-scp $1 root@192.168.11.56:$2
+sshpass -p "6633" scp ${local_files} root@192.168.11.56:$remote_files
+
+
+
+

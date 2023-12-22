@@ -48,7 +48,9 @@ int main()
             else if (touch->start->x > 320 && touch->start->y > 160 &&
                 touch->end->x < 480 && touch->start->y < 320)
             {
-                game(lcd, stack, touch, 5);
+                // 随机生成3~8的数字
+                srand(time(NULL));
+                game(lcd, stack, touch, rand() % 6 + 3);
             }
             else if (touch->start->x > 480 && touch->start->y > 160 &&
                 touch->end->x < 640 && touch->start->y < 320)
@@ -102,41 +104,53 @@ void scratch(Lcd *lcd, Stack *stack, Touch *touch)
         return;
     }
     lcd_clear(lcd, WHITE);
-    Stack *pic_statk = stack_create(NULL);
+    Stack *pic_stack = stack_create(NULL);
+    Font *font = font_open("STCAIYUN.TTF");
+    font_size(font, 70);
 
-    Font *font = font_open("./STCAIYUN.TTF");
-    font_size(font, 80);
 
+    char *prize[23] = { "1","5","10","20","50","88","100","200","500","888","1K","2K","5K","8888","1W","2W","5W","88888","10W","20W","50W","888888","100W" };
     int num = 0;
-    // 随机生成1~1000000的数字
+    // 随机乘胜1~1000000的数字
     srand(time(NULL));
-    num = rand() % 1000000 + 1;
+    num = rand() % 23;
 
-    Canvas *canvas_num = canvas_create(300, 100, 4, WHITE);
-    font_printf(font, canvas_num, 10, 10, YELLOW, 0, "%d", num);
-    Pic *pic_test = canva_show(canvas_num, lcd, 300, 100);
-    stack_push(pic_statk, stack_create(pic_test));
-    canvas_close(canvas_num);
+    Canvas *canvas = canvas_create(300, 150, 4, TRANSPARENT);
+    font_printf(font, canvas, canvas->width / 2 - 70 * strlen(prize[num]) / 4, canvas->height / 2 - 70 / 2, YELLOW, 0, "%s", prize[num]);
+    Pic *pic1 = canva_show(canvas, lcd, 250, 100);
+    stack_push(pic_stack, stack_create(pic1));
+    canvas_close(canvas);
 
-    pic_clear(pic_test, lcd);
+    canvas = canvas_create(300, 150, 4, BLACK);
+    font_printf(font, canvas, 10, 10, BLACK, 0, "");
+    Pic *pic2 = canva_show(canvas, lcd, 250, 100);
+    stack_push(pic_stack, stack_create(pic2));
+    canvas_close(canvas);
 
+
+
+    int status = 1;
     while (1)
     {
-        touch_start(touch, 1);
-        if (touch->status == 1)
+        touch_start(touch, status == 1 ? 1 : 0);
+        if (touch->start->x > 750 && touch->start->y < 50)
+            break;
+        if (touch->status == 1 && status == 1)
         {
-            if (touch->start->x > 750 && touch->start->y < 50)
-                break;
-            if (touch->status == 1 &&
-                touch->start->x > 300 && touch->start->y > 100 &&
-                touch->start->x < 600 && touch->start->y < 200)
-                pic_draw_circle(lcd, touch->start->x, touch->start->y, 10, pic_test);
+            pic_draw_circle(lcd, touch->start->x, touch->start->y, 20, stack_top(pic_stack)->pic);
+            if (stack_top(pic_stack)->pic->display_degree < 10)
+            {
+                pic_clear(stack_pop(pic_stack)->pic, lcd);
+                touch_clear(touch);
+                status = 0;
+            }
             touch_clear(touch);
         }
     }
-    pic_close(pic_test);
     font_close(font);
-    stack_clear(pic_statk);
+    stack_clear(pic_stack);
+    pic_close(pic1);
+    pic_close(pic2);
     pic_show(stack_top(stack)->pic, lcd, 0, 0);
 }
 
@@ -248,7 +262,7 @@ int wooden_fish(Lcd *lcd, Stack *stack, Touch *touch) //木鱼
 
     while (1)
     {
-        touch_start(touch, 0);
+        touch_start(touch, 2);
         if (touch->status == 1)
         {
             number++;

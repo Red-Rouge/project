@@ -42,6 +42,7 @@ Canvas *canvas_create(int width, int height, int bytesperpixel, unsigned int col
 
 int font_printf(Font *font, Canvas *canvas, int x, int y, unsigned int color, int maxWidth, char *text, ...)
 {
+    printf("%d\n", __LINE__);
     // 将可变参数列表与text组合起来
     unsigned char alpha = (color >> 24) & 0XFF;  // 取出透明位
     unsigned char red = (color >> 16) & 0XFF;  // 取出红
@@ -55,25 +56,7 @@ int font_printf(Font *font, Canvas *canvas, int x, int y, unsigned int color, in
     va_end(args);
     return -1;
 }
-int font_printf_lcd(Font *font, Lcd *lcd, int x, int y, unsigned int color, int maxWidth, char *text, ...)
-{
-    // 将可变参数列表与text组合起来
-     // 将可变参数列表与text组合起来
-    unsigned char alpha = (color >> 24) & 0XFF;  // 取出透明位
-    unsigned char red = (color >> 16) & 0XFF;  // 取出红
-    unsigned char blue = (color >> 8) & 0XFF;  // 取出蓝
-    unsigned char green = (color >> 0) & 0XFF;  // 取出绿色
-    va_list args;
-    va_start(args, text);
-    char buffer[200];
-    int ret = vsprintf(buffer, text, args);
-    Canvas *canvas = canvas_create(800, 480, 4, WHITE);
-    strcpy(canvas->map, lcd->mmap_addr);
-    fontPrint(font, canvas, x, y, buffer, getColor(alpha, blue, green, red), maxWidth);
-    va_end(args);
-    canvas_close(canvas);
-    return -1;
-}
+
 
 
 Pic *canva_show(Canvas *canvas, Lcd *lcd, int x, int y)

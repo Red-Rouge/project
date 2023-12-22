@@ -100,7 +100,6 @@ int font_size(Font *f, int pixels);
 /*把字体格式化输出到输出框中，font：字体，canvas:输出框，x，y：坐标，Color颜色，
 maxWidth：一行最多显示的字体数量，默认为0，是全字符显示，test：显示的文本，支持格式化*/
 int font_printf(Font *font, Canvas *canvas, int x, int y, unsigned int Color, int maxWidth, char *text, ...);
-int font_printf_lcd(Font *font, Lcd *lcd, int x, int y, unsigned int Color, int maxWidth, char *text, ...);
 // 关闭字体库
 void font_close(Font *font);
 

@@ -23,7 +23,9 @@
         "lcd.h": "c",
         "time.h": "c",
         "2048.h": "c",
-        "touch.h": "c"
+        "touch.h": "c",
+        "link.h": "c"
     },
+    "C_Cpp.errorSquiggles": "disabled",
     // "C_Cpp.errorSquiggles": "disabled"
 }
